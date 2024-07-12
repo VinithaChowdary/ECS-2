@@ -1,0 +1,88 @@
+class Schlaeger{
+
+	field int length, height, x,y;
+
+        constructor Schlaeger new (int xPos, int yPos){
+		let length = 60; 
+		let height = 10;
+		if((xPos-length < 0)){
+			let xPos = length + 1;
+		}
+		if((yPos-height < 0)){
+			let yPos = height + 1;
+		}
+		let x = (xPos-length);
+		let y = (yPos-height);
+		return this;
+	}
+	
+	
+        method void drawSchlaeger(){
+		do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + length, y + height);
+		return;
+	}
+	
+	
+	method void moveRight(){
+		if((x+length) = 511){
+			return;
+		}
+		let x = x+1;
+		return;
+	}
+	
+	
+	method void moveLeft(){
+		if(x = 0){
+			return;
+		}
+		let x = x-1;
+		return;
+	}
+	
+	method int getX(){
+		return x;
+	}
+	
+	method int getY(){
+		return y;
+	}
+	
+	method int getLength(){
+		return length;
+	}
+
+     
+	
+
+	method void schlaegerCollisionCheck(Ball ball){
+		var int ballX, ballY, ballRadius, schlaegerX, schlaegerY, schlaegerLength, third;
+		
+		let ballX = ball.getX();
+		let ballY = ball.getY();
+		let ballRadius = ball.getRadius();
+		
+		let schlaegerLength = length;
+		let third = (schlaegerLength / 3);
+		
+		if(((ballY+ballRadius)+1) > y){
+			if(((ballX-ballRadius)+1) > x){
+				if(ballX < (x+(1*third))){
+					do ball.collideWithSchlaeger(1);
+					return;
+				}
+				if(ballX < (x+(2*third))){
+					do ball.collideWithSchlaeger(2);
+					return;
+				}
+				if(((ballX-ballRadius)-1) < (x+(3*third))){
+					do ball.collideWithSchlaeger(3);
+					return;
+				}
+			}
+		}
+
+		return;
+	}
+}

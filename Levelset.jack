@@ -1,0 +1,153 @@
+class Levelset{
+
+	field Game game;
+	field Block dummyBlock; 
+	field Array level;
+        field Random rand;
+        field int currentIndex, maxIndex;
+	
+
+	method void initBasicGames(){
+		var int i, allIndex, anzBlocks, halfAnz;
+		let level = Array.new((65 + 5)); 
+		let allIndex = 0;
+		
+		let i = 0;
+		let anzBlocks = 10;
+		let halfAnz = Math.divide(anzBlocks, 2);
+		let level[allIndex] = anzBlocks;
+		let allIndex = allIndex + 1;
+		while(i < anzBlocks){
+			let level[allIndex] = Block.new(100 + (60*Util.mod(i,halfAnz)), 75+((Math.divide(i,halfAnz)+1)*dummyBlock.getHeight()), game);
+			let i = i+1;
+			let allIndex = allIndex+1;
+		}
+		
+		let i = 0;
+		let level[allIndex] = anzBlocks;
+		let allIndex = allIndex + 1;
+		while(i < anzBlocks){
+			let level[allIndex] = Block.new(120 + (60*Util.mod(i,halfAnz)), 20+((Math.divide(i,halfAnz)+1)*(dummyBlock.getHeight()+50)), game);
+			let i = i+1;
+			let allIndex = allIndex+1;
+		}
+		
+		let i = 0;
+		let level[allIndex] = anzBlocks;
+		let allIndex = allIndex + 1;
+		while(i < anzBlocks){
+			let level[allIndex] = Block.new(140 * (Math.divide(i,halfAnz)+1), 20+(((dummyBlock.getHeight()+10)*Util.mod(i,halfAnz))), game);
+			let i = i+1;
+			let allIndex = allIndex+1;
+		}
+		
+		let i = 0;
+		let level[allIndex] = anzBlocks;
+		let allIndex = allIndex + 1;
+		while(i < anzBlocks){
+			let level[allIndex] = Block.new(10+(430 * (Math.divide(i,halfAnz))), 20+(((dummyBlock.getHeight()+10)*Util.mod(i,halfAnz))), game);
+			let i = i+1;
+			let allIndex = allIndex+1;
+		}
+		
+		let anzBlocks = 25;
+		let halfAnz = Math.divide(anzBlocks, 5);
+		let i = 0;
+		let level[allIndex] = anzBlocks;
+		let allIndex = allIndex + 1;
+		while(i < anzBlocks){
+			let level[allIndex] = Block.new(10+(110 * (Math.divide(i,halfAnz))), 20+(((dummyBlock.getHeight()+10)*Util.mod(i,halfAnz))), game);
+			let i = i+1;
+			let allIndex = allIndex+1;
+		}
+		
+		let maxIndex = allIndex;
+		
+		return;
+	}
+	
+        
+	method Array getNewRandomLevel(){
+		var int anzBlocks, i, j, x, y; 
+		var Array tmpLvl;
+		var Block dummyBlock;
+		var boolean testCollision;
+		
+		let dummyBlock = Block.new(0, 0, this);
+		
+		let anzBlocks = rand.nextIntRange(5,15);
+		let tmpLvl = Array.new(anzBlocks + 1);
+		let tmpLvl[0] = anzBlocks;
+		let i = 1;
+		while((i-1) < anzBlocks){
+			let testCollision = true;
+			
+			while(testCollision){ 
+				let testCollision = false;
+				let x = rand.nextInt((500-dummyBlock.getWidth()));
+				let y = rand.nextIntRange(20, (240-dummyBlock.getHeight()));
+				let j = 1;
+				while(j < i){
+					let dummyBlock = tmpLvl[j];
+					if(Math.abs(x-dummyBlock.getX()) < (dummyBlock.getWidth() + 20)){
+						if(Math.abs(y-dummyBlock.getY()) < (dummyBlock.getHeight() + 20)){
+							let testCollision = true; 
+						}
+					
+					}
+					let j = j+1;
+				}
+			}
+			let tmpLvl[i] = Block.new(x, y, game);
+			let i = i + 1;
+		}
+		return tmpLvl;
+	}
+
+       constructor Levelset new(Random randArg, Game gameArg){
+		let rand = randArg;
+		let game = gameArg;
+		let currentIndex = 0;
+		let dummyBlock = Block.new(0,0,this);
+		do initBasicGames();
+		return this;
+	   }
+	
+	
+	method Array getNewLevel(){
+		var int i, anzBlocks;
+		var Array tmpLvl;
+		var Block tmpBlock;
+		
+		if(maxIndex = currentIndex){ 
+			let tmpLvl = getNewRandomLevel();
+			return tmpLvl;
+		}
+		
+		let anzBlocks = level[currentIndex];
+		let currentIndex = currentIndex + 1;
+		let tmpLvl = Array.new(anzBlocks + 1);
+		let tmpLvl[0] = anzBlocks;
+		let i = 1;
+		while((i-1) < anzBlocks){
+			let tmpBlock = level[currentIndex];
+			do tmpBlock.enable();
+			let tmpLvl[i] = tmpBlock;
+			let i = i + 1;
+			let currentIndex = currentIndex + 1;
+		}
+		return tmpLvl;
+	}
+	
+	
+	method Array getFirstLevel(){
+		let currentIndex = 0;
+		return getNewLevel();
+	}
+	
+	method void dispose(){
+		do level.dispose();
+		return;
+	}
+	
+}

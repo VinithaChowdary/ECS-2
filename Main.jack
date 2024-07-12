@@ -1,0 +1,49 @@
+class Main {
+  function void main(){
+        var String showedText;
+        var boolean showText;
+	var Game game;
+        var int randSeed, key;
+	let showText = false;
+	let randSeed = 0;
+	
+	
+	do Output.moveCursor(2, 16);
+	do Output.printString("Breakout by Vinitha,Karthik,Priya");
+	do Output.moveCursor(10, 13);
+	do Output.printString("Please press any key to start the game!");
+	do Output.moveCursor(20, 7);
+	do Output.printString("- Thanks to Niranjan Sir for the idea! -");
+	
+	
+    let key = Keyboard.keyPressed();
+	
+	while(key = 0){
+		if(randSeed = 32767){
+			let randSeed = -1;
+			do Output.moveCursor(10, 13);
+			if(showText){
+				let showedText = "Please press any key to start the game!";
+			}else{
+				let showedText = "                                       ";	
+			}
+			
+			do Output.printString(showedText);
+			do showedText.dispose();
+			let showText = ~showText;
+	
+		}
+		let randSeed = randSeed + 1;
+		let key = Keyboard.keyPressed();
+	}
+	do Sys.wait(200);
+
+	
+	let game = Game.new(randSeed);
+	while(~game.doExit()){
+		do game.run();
+	}
+	return;
+  }
+
+}
